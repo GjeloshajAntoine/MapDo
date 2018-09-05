@@ -1,0 +1,55 @@
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="left">
+        <a href="#" class="link back ">
+            <i class="icon icon-back"></i>
+            <span>Back</span>
+        </a>
+    </div>
+    <div class="center">What are you doing ...</div>
+    <div class="right">
+    <a href="#" class="link">Start</a>
+</div>
+  </div>
+</div>
+<div class="pages navbar-fixed">
+  <div data-page="doingPicker" class="page">
+    <div class="page-content">
+      {{#each activites}}
+      <div class="content-block-title">{{@key}}</div>
+      <div class="list-block">
+        <ul>
+          <!-- Single radio input -->
+          {{#each this}}
+          <li>
+            <label class="label-radio item-content">
+              <!-- Checked by default -->
+              <input type="radio" name="my-radio" value="{{name}}" checked="">
+              <div class="item-media">
+                  {{emoji}}
+              </div>
+              <div class="item-inner">
+                <div class="item-title">{{name}}</div>
+              </div>
+            </label>
+          </li>
+
+          {{/each}}
+          <!-- Another radio input -->
+          <li>
+            <label class="label-radio item-content">
+              <input type="radio" name="my-radio" value="Movies">
+              <div class="item-inner">
+                <div class="item-input">
+                  <input type="text" placeholder="Your name">
+                </div>
+              </div>
+            </label>
+          </li>
+        </ul>
+     </div>
+     {{/each}}
+µ
+    </div>
+  </div>
+</div>

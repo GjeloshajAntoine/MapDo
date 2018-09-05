@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <link rel="stylesheet" href="css/framework7.ios.min.css">
+        <!-- Path to Framework7 iOS related color styles -->
+        <link rel="stylesheet" href="css/framework7.ios.colors.min.css">
+        <link rel="stylesheet" href="leaflet/leaflet.css" />
+        <link rel="stylesheet" type="text/css" href="css/framework7-icons.css">
+        <script src="leaflet/leaflet.js"></script>
+        <!--<script type="text/javascript" src="https://stamen-maps.a.ssl.fastly.net/js/tile.stamen.js"></script> -->
+        <script type="text/javascript" src="js/tile.stamen.js"></script>
+        <script type="text/javascript" src="activities\activities.js"></script>
+        <script src="js/DoingController.js"></script>
+        <script src="js/socket.io.min.js"></script>
+        <script src="js/jquery-3.2.0.min.js"></script>
+        <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+        <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+        <script src="js/mapMainView.js"></script>
+        <script src="js/Leaflet.LayerGroup.Collision.js"></script>
+        <script src="js/LocalData.js"></script>
+        <script src="profile/profile.js"></script>
+        <script src="profile/subscribeView.js"></script>
+        <script src="profile/loginView.js"></script>
+        <script src="settings/settingsView.js"></script>
+        <title>Hello World</title>
+        <style>
+          body{
+            text-transform: none;
+          }
+          .testicondiv{
+            border-radius: 144px 144px 144px 144px;
+            -moz-border-radius: 144px 144px 144px 144px;
+            -webkit-border-radius: 144px 144px 144px 144px;
+            border: 0px solid #000000;
+            width: 25px !important;
+            height: 24px !important;
+          //  background-color: black;
+          }
+          .profileRoundDisplay{
+            display: block;
+            margin: auto;
+            border-radius:77px;
+          }
+          .custom-popup .leaflet-popup-content-wrapper {
+            background:#2c3e50;
+            color:#fff;
+            font-size:16px;
+            line-height:24px;
+            }
+          .leaflet-popup-close-button{
+              color: #ff0000;
+            }
+          .leaflet-popup-content-wrapper {
+                background-color: rgba(47, 47, 47, 0.39);
+                /* background-color: rgba(142, 3, 245, 0.59); */
+                /* background-color: rgba(255, 20, 147, 0.39); */
+                background-color: black;
+                width: 284px;
+            }
+          .custom-popup .leaflet-popup-tip-container {
+            width:30px;
+            height:15px;
+            }
+          .custom-popup .leaflet-popup-tip {
+            border-left:15px solid transparent;
+            border-right:15px solid transparent;
+            border-top:15px solid #2c3e50;
+            }
+        </style>
+    </head>
+    <body>
+      <script id="template"  type="text/template7">
+         <div class="row no-gutter" style="color:white;">
+          <div class="col-50" style="color: lime;font-family: sans-serif;font-weight: bold;text-align: left;">
+            {{doingCategory}}
+          </div>
+          <div class="col-50">
+            {{pseudo}}
+          </div>
+        </div>
+        <div class="row no-gutter" style="color: white;">
+            <div class="col-10" style="font-size: 19px;">
+              {{emojiCat}}
+            </div>
+          <div class="col-80" style="  font-style: oblique;  font-weight: 900;  text-align: center;">
+            {{message}}
+          </div>
+
+          <div class="col-10" style="font-si ze: 5px;">
+            <i class="icon f7-icons">login_fill</i></div>
+          </div>
+
+      </script>
+      <script id="iconTemplate"  type="text/template7">
+        <div style="font-size:25px;" class="">{{emojiActivity}}</div>
+
+        <div class="" style="
+          font-size: small;
+          font-weight: 900;
+          overflow: visible;
+          padding: 0;
+          margin-top: -13px;
+          color: rgb(0, 0, 0);
+          font-family: monospace;
+      ">{{pseudo}}</div>
+      </script>
+      <!-- Tabs wrapper, shoud have "tabs" class. Required element -->
+      <div class="views tabs toolbar-fixed">
+        <!-- First tab, should have "tab" class and unique id attribute -->
+        <!-- First tab is active by default - additional "active" class -->
+        <div class="tab active view view-main" id="tab1">
+          <!--
+          <div class="navbar" style=" background-color: rgba(255, 255, 235, 0.44);">
+            <div class="navbar-inner" style="-webkit-backdrop-filter: saturate(180%) blur(20px);">
+              <div class="right">
+                <a href="#" onclick="doingController.getCurrentUserMarkerLocation()" class="link">Locate</a>
+              </div>
+              <div class="center">MapDo</div>
+            </div>
+          </div>
+        -->
+        <div class="navbar">
+            <div class="list-block" style="margin:0px;">
+              <ul>
+                <li id="DoingAccordion" class="accordion-item">
+                  <a href="#" class="item-content item-link">
+                    <div class="item-media"><i class="icon f7-icons">persons</i></div>
+                    <div class="item-inner">
+                      <div class="item-title">Tell the world what you are doing</div>
+                    <!--  <div class="item-after">No</div>-->
+                    </div>
+                  </a>
+                  <div class="accordion-item-content">
+                    <div class="content-block">
+                      <ul>
+                        <li>
+                          <div class="item-content">
+                            <div class="item-inner">
+                              <div class="item-input">
+                                <input type="text" placeholder="What are you doing ?" readonly id="picker-activity">
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="item-content">
+                            <div class="item-inner">
+                              <div class="item-input">
+                                <input type="text" id="doingMessage" placeholder="Message">
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="item-content">
+                            <div class="item-inner">
+                              <div class="item-input">
+                                <input type="text" placeholder="Duration" id="picker-duration">
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <li>
+                          <div class=" item-content">
+                            <div class="item-media"><i class="icon f7-icons">persons</i></div>
+                            <div class="item-inner">
+                              <div class="item-title">Wanna Talk ?</div>
+                              <div class="item-after">  <label class="label-switch"><input type="checkbox"> <div class="checkbox"></div></label></div>
+                            </div>
+                          </div>
+                        </li>
+                        <li>
+                          <div class=" item-content">
+                            <div class="item-media">👣</div>
+                            <div class="item-inner">
+                              <div class="item-title">Wanna meet ?</div>
+                              <div class="item-after">  <label class="label-switch"><input type="checkbox"> <div class="checkbox"></div></label></div>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="row" style="padding:1%;">
+                        <div class="col-50">
+                          <a href="#" class="button button-big button-red button-fill bg-red">Stop</a>
+                        </div>
+                        <div class="col-50">
+                          <a href="#" id="startDoingButton" class="button button-big button-green button-fill bg-green">Start</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+        </div>
+          <div class="pages">
+            <div data-page="home-1" class="page navbar-fixed toolbar-fixed">
+              <div class="page-content">
+                <div class="">
+                  <div id="mapidOLD" ></div>
+                </div>
+                  <div id="mapid" style="height:80%;"> </div>
+                <div class="list-block">
+                  <ul>
+                    <li>
+                      <a href="sort.html" class="item-link item-content">
+                        <div class="item-media">👣</div>
+                        <div class="item-inner">
+                          <div class="item-title">Sort</div>
+                          <div class="item-after">No</div>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                  </div>
+                  <div class="content-block-title">What are you doing ...</div>
+                  <div class="list-block">
+                   <ul>
+                     <li>
+                       <a href="doingPicker.html" class="item-link item-content ">
+                         <div class="item-media"><i class="icon f7-icons">persons</i></div>
+                         <div class="item-inner">
+                           <div class="item-title">Tell the world what you are doing</div>
+                           <div class="item-after">No</div>
+                         </div>
+                       </a>
+                     </li>
+                   </ul>
+                  </div>
+                  <div class="content-block-title">For how long ...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Second tab, should have "tab" class and unique id attribute -->
+        <div class="view tab" id="tab2">
+          <div class="navbar">
+            <div class="navbar-inner">
+              <div class="center">Chats</div>
+            </div>
+          </div>
+          <div class="pages navbar-fixed">
+            <div data-page="chatList" class="page">
+              <div class="page-content">
+                <div class="list-block media-list">
+                  <ul>
+                    <li>
+                      <div class="item-content">
+                        <div class="item-media"><img src="" width="44"></div>
+                        <div class="item-inner">
+                          <div class="item-title-row">
+                            <div class="item-title">Some Text to fill the mess</div>
+                          </div>
+                          <div class="item-subtitle">Noth'in</div>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- Third tab, should have "tab" class and unique id attribute -->
+        <div class="view tab" id="userTab">
+          <div class="navbar">
+            <div class="navbar-inner">
+              <div class="center">Profile</div>
+            </div>
+          </div>
+          <div class="pages navbar-fixed">
+            <div data-page="userTab" class="page">
+            <div class="page-content">
+                <img id="profileRoundDisplay" class="profileRoundDisplay" src="img/profile.jpg" alt="Profile face" height="50" width="50">
+                <a href="#" id="ChangeImageProfile" class="button button-fill" style="margin: auto;min-width: 50px;max-width:400px;">change profile picture </a>
+                <div class="list-block">
+                  <ul>
+                    <li>
+                      <a href="profile/changePassword.html" class="item-link item-content">
+                        <div class="item-media"><i class="icon icon-f7"></i></div>
+                        <div class="item-inner">
+                          <div class="item-title">Change password</div>
+                          <div class="item-after">Label</div>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+        </div>
+        </div>
+        <div class="view tab" id="subscribeView">
+          <div class="pages">
+          </div>
+        </div>
+        <div class="view tab" id="settings">
+          <div class="navbar">
+            <div class="navbar-inner">
+              <div class="center">Profile</div>
+            </div>
+          </div>
+          <div class="pages navbar-fixed">
+            <div data-page="settings" class="page">
+            <div class="page-content">
+                <div class="list-block">
+                  <ul>
+                    <li>
+                      <a href="#" id="settingsDisconnect" class="item-link item-content">
+                        <div class="item-inner">
+                          <div  class="item-title color-red">disconnect</div>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+        </div>
+        </div>
+        <div class="toolbar tabbar tabbar-labels">
+            <div class="toolbar-inner">
+                <a href="#tab1" class="tab-link active">
+                    <i class="icon f7-icons">world</i>
+                    <span class="tabbar-label">map</span>
+                </a>
+                <a href="#tab2" class="tab-link">
+                    <i class="icon f7-icons">chats
+                        <span class="badge bg-red">not working yet,it's a beta bro...</span>
+                    </i>
+                    <span class="tabbar-label">chat</span>
+                </a>
+                <a href="#userTab" class="tab-link">
+                    <i class="icon f7-icons">persons</i>
+                    <span class="tabbar-label">profile</span>
+                </a>
+                <a href="#settings" class="tab-link">
+                    <i class="icon f7-icons">settings</i>
+                    <span class="tabbar-label">settings</span>
+                </a>
+            </div>
+        </div>
+      </div>
+
+
+      <script type="text/javascript" src="js/framework7.min.js"></script>
+      <script type="text/javascript" src="cordova.js"></script>
+      <script type="text/javascript" src="js/index.js"></script>
+    </body>
+</html>

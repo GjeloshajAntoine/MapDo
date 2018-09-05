@@ -1,0 +1,6 @@
+var doingCategoryList={
+
+};
+var doingCategoryEmoji={
+  
+}

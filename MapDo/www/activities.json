@@ -1,0 +1,15 @@
+"activites":{
+	"feels": [{"name": "pizza","emoji": "🍕"},{"name": "fastFood","emoji": "🍔"}],
+	"sport": [{"name": "pizza","emoji": "🍕"},{"name": "fastFood","emoji": "🍔"}],
+	"game": [{"name": "pizza","emoji": "🍕"},{"name": "fastFood","emoji": "🍔"}],
+	"food": [{"name": "pizza","emoji": "🍕"},{"name": "fastFood","emoji": "🍔"}],
+	"drink": [{"name": "pizza","emoji": "🍕"},{"name": "fastFood","emoji": "🍔"}],
+	"cook": [{"name": "pizza","emoji": "🍕"},{"name": "fastFood","emoji": "🍔"}],
+	"voyage": [{"name": "pizza","emoji": "🍕"},{"name": "fastFood","emoji": "🍔"}],
+	"entertainement": [{"name": "music","emoji": "🎵"},
+						{"name":"movie","emoji":"🎥"},
+						{"name":"reading","emoji":"📖"},
+						{"name":"TV","emoji":"📺"}
+	],
+	"app":[{"name":"anyapp","emoji":"A"}]
+}
